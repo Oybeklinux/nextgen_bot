@@ -1,9 +1,11 @@
 import sqlite3
 
+
 class Database:
 
-    def __init__(self, path_to_db = "main.db"):
+    def __init__(self, path_to_db="data/main.db"):
         self.db = path_to_db
+        self.create_table_users()
 
     @property
     def connection(self):
@@ -42,8 +44,11 @@ _______________________________________
         CREATE TABLE IF NOT EXISTS users(
         id int PRIMARY KEY, 
         name varchar(255) NOT NULL,
-        email varchar(255)
+        email varchar(255),
+        language int,
+        phone varchar(20)
         )"""
+        # 1-uzbek, 2-russian, 3-english
         
         self.execute(sql, commit=True)
 
@@ -52,6 +57,11 @@ _______________________________________
 
         parameters = (id, name, email)
         self.execute(sql, parameters, commit=True)
+
+    def is_user_registered(self, id):
+        sql = "SELECT count(*) FROM users WHERE id=? and phone is not NULL"
+        row = self.execute(sql,(id,), fetchone=True)
+        return row[0] > 0
 
     def select_all_users(self):
         sql = """SELECT * FROM users"""
@@ -67,15 +77,23 @@ _______________________________________
         sql =" AND ".join(
             [f"{param} = ?" for param in parameters]
         )
-        parameters = tuple(parameters.values())
+        parameters = list(parameters.values())
         return sql, parameters
 
     def select_count(self):
         return self.execute("""SELECT count(*) FROM users""", fetchone=True)
 
-    def update_email(self, email, id):
-        sql = """UPDATE users SET email=? WHERE id=?"""
-        self.execute(sql, paramameters=(email, id), commit=True)
+    def update_user(self, **kwargs):
+        id = kwargs['id']
+        kwargs.pop('id')
+        sql, parameters = self.format_args(kwargs)
+        parameters.append(id)
+        sql = sql.replace('AND', ',')
+        sql = f"""UPDATE users SET {sql} WHERE id=?"""
+        try:
+            self.execute(sql, parameters, commit=True)
+        except Exception as e:
+            print(e)
 
     def delete_user(self, id):
         sql = """DELETE users WHERE id=?"""

@@ -43,8 +43,7 @@ async def back_to_course(callback: types.CallbackQuery) -> None:
 # Курсы
 @dp.message_handler(Command('courses'))
 async def send_main_menu(message: types.Message) -> None:
-    text = main_text.replace("#full_name", message.from_user.full_name)
-    await message.answer(text, reply_markup=main_ikb, parse_mode=ParseMode.MARKDOWN)
+    await message.answer(about_courses_text, reply_markup=main_ikb, parse_mode=ParseMode.MARKDOWN)
 
 
 # Главное -> IT-тест 🧠
