@@ -6,3 +6,4 @@ class IsPrivate(BoundFilter):
 
     async def check(self, message: Message) -> bool:
         return ChatType.PRIVATE == message.chat.type
+

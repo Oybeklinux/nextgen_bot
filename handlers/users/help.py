@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandHelp
 
+from data.texts import Texts
 from loader import dp
 from utils.misc import rate_limit
 
@@ -9,9 +10,8 @@ from utils.misc import rate_limit
 @dp.message_handler(CommandHelp())
 async def bot_help(message: types.Message):
     text = [
-        'Список команд: ',
-        '/start - Начать диалог',
-        '/help - Получить справку',
-        '/course - Получить информацию о курсах'
+        Texts().get('commands')
     ]
     await message.answer('\n'.join(text))
+
+

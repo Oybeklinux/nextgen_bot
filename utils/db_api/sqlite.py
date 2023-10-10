@@ -45,7 +45,7 @@ _______________________________________
         id int PRIMARY KEY, 
         name varchar(255) NOT NULL,
         email varchar(255),
-        language int,
+        language varchar(3),
         phone varchar(20)
         )"""
         # 1-uzbek, 2-russian, 3-english
@@ -71,6 +71,13 @@ _______________________________________
         sql, parameters = self.format_args(kwargs)
         sql = f"""SELECT * FROM users WHERE {sql}"""
         return self.execute(sql, parameters=parameters, fetchone=True)
+
+    def select_user_language(self, id):
+        sql = f"""SELECT language FROM users WHERE id=?"""
+        row = self.execute(sql, (id, ), fetchone=True)
+        if not row:
+            return None
+        return row[0]
 
 
     def format_args(self, parameters: dict):

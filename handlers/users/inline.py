@@ -1,16 +1,18 @@
 from aiogram import types
+
+from data.texts import Texts
 from loader import dp
 
 # Главное -> Курсы 💻 -> Поиск
 @dp.inline_handler(text='')
 async def search(query: types.InlineQuery):
-    search_word = query.query or ''
 
+    text = Texts().get('python')
     results = [types.InlineQueryResultArticle(
         id='1',
-        title='Python и Django',
+        title='Python. Django',
         thumb_url='https://telegra.ph/file/1ed2732d276af0a239ca1.png',
-        description='Основы программирования. ООП. GUI приложений. Создание веб-приложений',
+        description=text, #'Основы программирования. ООП. GUI приложений. Создание веб-приложений',
         input_message_content=types.InputTextMessageContent(
             message_text='course_Python#'
         )

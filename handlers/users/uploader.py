@@ -5,7 +5,7 @@ import re
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, ContentType
 
-from data import Text
+
 from filters import IsPrivate
 from utils.misc import edit_message, waiting_previous_execution, rate_limit
 

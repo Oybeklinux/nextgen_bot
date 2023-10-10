@@ -1,7 +1,9 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from data.texts import Texts
 
-main_kb = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="🔍 Курсы"),KeyboardButton(text="⚙ Настройки")],
-    ], resize_keyboard=True
-)
+def get_main_kb():
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text=Texts.get("bcourses")),KeyboardButton(text=Texts.get("bsettings"))],
+        ], resize_keyboard=True
+    )

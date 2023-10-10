@@ -1,6 +1,8 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.callback_data import CallbackData
 
+from data.texts import Texts
+
 # register to open lesson
 register_ol_cb = CallbackData("course", 'submenu')
 
@@ -8,9 +10,9 @@ register_ol_cb = CallbackData("course", 'submenu')
 def get_course_ikb(course):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Открытый урок", callback_data=register_ol_cb.new(submenu=course)),
-             InlineKeyboardButton(text="Связаться", url='https://t.me/kamilaa3')],
-            [InlineKeyboardButton(text="⬅ Назад", callback_data=back_to_course_cb.new(value='back'))]
+            [InlineKeyboardButton(text=Texts().get("iopen_lesson"), callback_data=register_ol_cb.new(submenu=course)),
+             InlineKeyboardButton(text=Texts().get("iget_in_touch"), url='https://t.me/kamilaa3')],
+            [InlineKeyboardButton(text=Texts().get("bto_main"), callback_data=back_to_course_cb.new(value='back'))]
         ]
     )
 
