@@ -5,13 +5,14 @@ from data.texts import Texts
 from keyboards import language_cb, get_phone_kb, get_main_kb
 from keyboards.default.settings import get_settings_kb
 from loader import dp, db
+from utils.set_bot_commands import set_default_commands
 
 
 @dp.callback_query_handler(language_cb.filter(), state=None)
 async def back_to_course(callback: types.CallbackQuery) -> None:
     language = language_cb.parse(callback.data)['language']
     db.update_user(id=callback.from_user.id, language=language)
-    Texts.set_language(language)
+    await set_default_commands(dp)
     await callback.message.answer(text=Texts.get("send_phone"),
                             parse_mode=ParseMode.MARKDOWN,
                             reply_markup=get_phone_kb()
@@ -26,11 +27,11 @@ async def phone_to_settings(message: types.Message, state: FSMContext):
         import re
         phone = message.text.replace(' ', '').replace('+','')
         if not re.match('\d{12}|\d{9}', phone):
-           await message.answer('Номер телефона должен состоять из 9 или 12 цифр. Введите заново')
+           await message.answer(Texts().get('warn_phone_len'))
            return
 
     if db.is_user_registered(user_id):
-        await message.answer(text='Ваш номер успешно изменен!', reply_markup=get_settings_kb())
+        await message.answer(text=Texts().get('phone_edit_ok'), reply_markup=get_settings_kb())
         await state.finish()
     else:
         await message.answer(text=Texts.get('tinput_name'))

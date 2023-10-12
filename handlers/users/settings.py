@@ -1,13 +1,14 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Text, CommandSettings
-from aiogram.types import ParseMode, ContentType, ContentTypes
+from aiogram.dispatcher.filters import CommandSettings
+from aiogram.types import ParseMode
 
 from filters.is_in import IsIn
 from keyboards import language_ikb, language_cb, get_phone_kb, get_main_kb
 from keyboards.default.settings import  get_settings_kb
 from loader import dp, db
 from data.texts import Texts
+from utils.set_bot_commands import set_default_commands
 
 
 @dp.message_handler(CommandSettings())
@@ -29,6 +30,7 @@ async def edit_language(message: types.Message, state: FSMContext):
     await state.set_state('edit_languge')
 
 
+
 @dp.message_handler(IsIn('bsend_phone'))
 async def edit_phone(message: types.Message, state: FSMContext):
     await state.finish()
@@ -40,7 +42,8 @@ async def edit_phone(message: types.Message, state: FSMContext):
 async def name_to_settings(message: types.Message, state: FSMContext):
     name = message.text
     db.update_user(id=message.from_user.id, name=name)
-    await message.answer(text='Ваш имя успешно изменен!', reply_markup=get_settings_kb())
+    text = Texts.get('name_changed')
+    await message.answer(text=text, reply_markup=get_settings_kb())
     await state.finish()
 
 
@@ -48,8 +51,10 @@ async def name_to_settings(message: types.Message, state: FSMContext):
 async def lang_to_settings(callback: types.CallbackQuery, state: FSMContext) -> None:
     language = language_cb.parse(callback.data)['language']
     db.update_user(id=callback.from_user.id, language=language)
-    Texts.set_language(language)
-    await callback.message.answer(text=f"Язык успешно обновлен", reply_markup=get_settings_kb())
+
+    text = Texts.get('lang_changed')
+    await set_default_commands(dp)
+    await callback.message.answer(text=text, reply_markup=get_settings_kb())
     await state.finish()
 
 

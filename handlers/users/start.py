@@ -16,9 +16,6 @@ async def bot_start(message: types.Message):
         pass
     user = db.select_user(id=user_id)
     name = user[1]
-    language_code = user[3]
-    if language_code:
-        Texts().set_language(language_code)
     text = (
         "🇺🇿 Assalomu alaykum #full_name 👋! Men NextGen Academy botiman.\n"
         "Ro'yxatdan o'tish uchun tilingizni tanlang\n\n"
