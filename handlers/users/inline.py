@@ -1,4 +1,5 @@
 from aiogram import types
+
 from loader import dp, db
 
 
@@ -12,7 +13,7 @@ async def search(query: types.InlineQuery):
         results.append(
             types.InlineQueryResultArticle(
                 id=row[0],
-                title=row[1],
+                title=row[4],
                 thumb_url=row[2],
                 description=row[3],
                 input_message_content=types.InputTextMessageContent(

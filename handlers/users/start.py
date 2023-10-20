@@ -1,6 +1,8 @@
 import sqlite3
+
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
+
 from data.texts import Texts
 from keyboards import language_ikb, get_main_kb
 from loader import dp, db

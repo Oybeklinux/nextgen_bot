@@ -3,11 +3,11 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import CommandSettings
 from aiogram.types import ParseMode
 
+from data.texts import Texts
 from filters.is_in import IsIn
 from keyboards import language_ikb, language_cb, get_phone_kb, get_main_kb
-from keyboards.default.settings import  get_settings_kb
+from keyboards.default.settings import get_settings_kb
 from loader import dp, db
-from data.texts import Texts
 from utils.set_bot_commands import set_default_commands
 
 

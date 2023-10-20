@@ -1,9 +1,15 @@
+import logging
 from utils.set_bot_commands import set_default_commands
+from loader import db #, postgresql
 
 
 async def on_startup(dp):
     import filters
     import middlewares
+    # logging.info('Connecting to DB')
+    # await postgresql.connect()
+    # logging.info('Migrating')
+    # await postgresql.migrate()
     filters.setup(dp)
     middlewares.setup(dp)
 

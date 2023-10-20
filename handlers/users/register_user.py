@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ParseMode, ContentType
+
 from data.texts import Texts
 from keyboards import language_cb, get_phone_kb, get_main_kb
 from keyboards.default.settings import get_settings_kb
@@ -18,17 +19,18 @@ async def back_to_course(callback: types.CallbackQuery) -> None:
                             reply_markup=get_phone_kb()
                             )
 
+
 @dp.message_handler(content_types=[ContentType.CONTACT])
 async def phone_to_settings(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
     if message.content_type is ContentType.CONTACT:
         phone = message.contact.phone_number
-    elif message.content_type is ContentType.TEXT:
-        import re
-        phone = message.text.replace(' ', '').replace('+','')
-        if not re.match('\d{12}|\d{9}', phone):
-           await message.answer(Texts().get('warn_phone_len'))
-           return
+    # elif message.content_type is ContentType.TEXT:
+    #     import re
+    #     phone = message.text.replace(' ', '').replace('+','')
+    #     if not re.match('\d{12}|\d{9}', phone):
+    #        await message.answer(Texts().get('warn_phone_len'))
+    #        return
 
     if db.is_user_registered(user_id):
         await message.answer(text=Texts().get('phone_edit_ok'), reply_markup=get_settings_kb())

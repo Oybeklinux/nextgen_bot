@@ -1,14 +1,37 @@
 import sqlite3
 
+from utils.db_api.migrations.sql import migrations
+
 
 class Database:
 
     def __init__(self, path_to_db="data/main.db"):
         self.db = path_to_db
-        self.create_table_users()
-        self.create_table_courses()
-        self.create_table_open_lessons()
-        self.create_table_open_lesson_users()
+        self.migrate()
+
+    def migrate(self):
+        # create initial tables
+        for sql in migrations[0]:
+            self.execute(sql, commit=True)
+        # migration
+        self.insert_migrations(0)
+        last_version = self.last_migrate_version()
+        for version, sqls in migrations.items():
+            if version == 0 or version <= last_version:
+                continue
+
+            for sql in sqls:
+                self.execute(sql, commit=True)
+            self.insert_migrations(version)
+
+    def last_migrate_version(self):
+        sql = "SELECT max(version) from migrations"
+        return self.execute(sql, fetchone=True)[0]
+
+    def insert_migrations(self, version):
+        sql = "insert or replace into migrations (version) values(?)"
+        self.execute(sql, parameters=(version,), commit=True)
+
 
 
     @property
@@ -43,63 +66,6 @@ _______________________________________
 _______________________________________
 ''')
 
-    # CREATE TABLE
-    def create_table_users(self):
-        sql = """
-        CREATE TABLE IF NOT EXISTS users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        name varchar(255) NOT NULL,
-        email varchar(255),
-        language varchar(3),
-        phone varchar(20)
-        )"""
-        # 1-uzbek, 2-russian, 3-english
-        
-        self.execute(sql, commit=True)
-
-    def create_table_open_lessons(self):
-        sql = """
-        CREATE TABLE IF NOT EXISTS open_lessons(
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        course int,
-        date datetime,        
-        format varchar(20),  
-        language varchar(3)
-        )"""
-
-        self.execute(sql, commit=True)
-
-    def create_table_courses(self):
-        sql = """
-        CREATE TABLE IF NOT EXISTS courses(
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        name varchar(100) NOT NULL,
-        description varchar(300),
-        language varchar(3),
-        about text,
-        career text,
-        for_whom text,
-        requirements text,
-        content text,
-        objective text,
-        price integer,
-        image varchar(300)
-        )"""
-        self.execute(sql, commit=True)
-
-    def create_table_open_lesson_users(self):
-        sql = """
-        CREATE TABLE IF NOT EXISTS open_lesson_users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        user_id int,
-        open_lesson_id int,     
-        course_name_id INTEGER,  
-        language varchar(3),                 
-        FOREIGN KEY(user_id) REFERENCES users(id),
-        FOREIGN KEY(open_lesson_id) REFERENCES open_lessons(id)
-        )"""
-
-        self.execute(sql, commit=True)
 
     # EXTRA FUNCTIONS
     def format_args(self, parameters: dict):
@@ -164,7 +130,7 @@ _______________________________________
     # COURSES
     def select_course_by_name(self, user_id, name):
         sql = """
-            SELECT id, name, description, about,career, for_whom,requirements,image 
+            SELECT id, name, description, about,career, for_whom,requirements,image, official_name 
             FROM courses 
             WHERE lower(name)=lower(?) and language=(select language from users where id=?)"""
         return self.execute(sql, parameters=(name,user_id), fetchone=True)
@@ -191,29 +157,40 @@ _______________________________________
             sql = "SELECT name FROM courses WHERE language=(select language from users where id=?)"
             return self.execute(sql, parameters=(user_id,), fetchall=True)
         if only_desc:
-            sql = "SELECT name, description FROM courses WHERE language=(select language from users where id=?)"
+            sql = "SELECT name, description, official_name FROM courses WHERE language=(select language from users where id=?)"
             return self.execute(sql, parameters=(user_id,), fetchall=True)
         if only_about:
             sql = "SELECT about FROM courses WHERE language=(select language from users where id=?)"
             return self.execute(sql, parameters=(user_id,), fetchall=True)
         if inline_mode:
 
-            sql = "SELECT id,name,image, description FROM courses WHERE language=(select language from users where id=?)"
+            sql = "SELECT id,name,image, description, official_name FROM courses WHERE language=(select language from users where id=?)"
             return self.execute(sql, parameters=(user_id,), fetchall=True)
 
     # OPEN LESSONS
     def select_open_lesson(self, course):
 
-        sql = f"""  SELECT strftime('%d-%m-%Y',date) as date, strftime('%H:%M',date) as time, language
-                    FROM open_lessons
-                    WHERE lower(course) = lower(?)
-                    ORDER by date DESC
-                    LIMIT 1"""
+        sql = f"""SELECT strftime('%d.%m.%Y',o.date) as date, strftime('%H:%M',o.date) as time, o.language, c.official_name
+                FROM open_lessons o
+                LEFT JOIN courses c ON lower(c.name) = lower(o.course) and c.language = o.language
+                WHERE lower(course) = lower(?)
+                ORDER by date DESC
+                LIMIT 1"""
 
         sql = sql.replace('#condition', 'course_id=(select id from courses where name=?)')
         return self.execute(sql, parameters=(course,), fetchone=True)
 
-
+    # OPEN LESSON USERS
+    def insert_open_lesson_users(self, user_id, open_lesson_id=None, course_name=None):
+        if not open_lesson_id and not course_name:
+            raise Exception("at least two arguments should be provided")
+        if open_lesson_id:
+            sql = "INSERT INTO open_lesson_users(user_id,open_lesson_id) VALUES(?,?)"
+            self.execute(sql, parameters=(user_id, open_lesson_id), commit=True)
+        else:
+            sql = """INSERT INTO open_lesson_users(user_id, course_id)
+            VALUES(?,(select id from courses where lower(?)=lower(name)))"""
+            self.execute(sql, parameters=(user_id, course_name), commit=True)
 
 if __name__ == "__main__":
     db = Database()

@@ -19,7 +19,8 @@ async def courses_selected(message: types.Message):
         replace('#about', f'{row[3]}\n\n').\
         replace('#career', f'{row[4]}\n\n').\
         replace('#for_whom', f'{row[5]}\n\n').\
-        replace('#requirements', f'{row[6]}\n\n')
+        replace('#requirements', f'{row[6]}\n\n').\
+        replace('#course_name', row[8])
     text = f"<a href='{row[7]}'> </a>{text}"
 
     await message.delete()
@@ -41,13 +42,11 @@ async def back_to_course(callback: types.CallbackQuery) -> None:
 async def send_main_menu(message: types.Message) -> None:
     user_id = message.from_user.id
     rows = db.select_courses(user_id, only_desc=True)
-    print("rows: ", rows)
     text = ''
     for row in rows:
-        text += f"🔹 *{row[0]}*. {row[1]}\n"
+        text += f"🔹 *{row[2]}*. {row[1]}\n"
     text = text.strip()
     text = Texts.get("courses").replace("#courses", text)
-    print('Textt:', Texts.get("courses").replace("#courses", text))
     await message.answer(text, reply_markup=get_main_ikb(), parse_mode=ParseMode.MARKDOWN)
 
 
@@ -113,6 +112,23 @@ async def course_objective(callback: types.CallbackQuery) -> None:
                                   parse_mode=ParseMode.MARKDOWN)
 
 
+@dp.callback_query_handler(register_ol_cb.filter(submenu='register_to_open_lesson_vip'))
+async def confirm_to_open_lesson(callback: types.CallbackQuery):
+    course = register_ol_cb.parse(callback.data)['course']
+    user = db.select_user(id=callback.from_user.id)
+    text = f"""
+    Клиент: {callback.from_user.mention} 
+    Записался на открытый урок по *{course.title()}*
+    Телефон клиента: {user[4]}
+    Имя клиента: {user[1]}
+    Дата отправки: {datetime.now().strftime("%d.%m.%Y %H:%M")}"""
+    db.insert_open_lesson_users(user_id=callback.from_user.id, course_name=course)
+    for manager in admins:
+        await callback.bot.send_message(chat_id=manager, text=text, parse_mode=ParseMode.MARKDOWN)
+
+    await callback.message.answer(text=Texts.get("open_lesson_confirm"))
+
+
 # registering to open class
 @dp.callback_query_handler(register_ol_cb.filter(submenu='register_to_open_lesson'))
 async def confirm_to_open_lesson(callback: types.CallbackQuery):
@@ -121,13 +137,13 @@ async def confirm_to_open_lesson(callback: types.CallbackQuery):
     row = db.select_open_lesson(course=course)
 
     datetime_str = f'{row[0]} {row[1]}'
-    datetime_object = datetime.strptime(datetime_str, '%d-%m-%Y %H:%M')
-    print("excuse_open_lesson",datetime_object, datetime.now())
+    datetime_object = datetime.strptime(datetime_str, '%d.%m.%Y %H:%M')
+
     if datetime_object < datetime.now():
         text = Texts.get('excuse_open_lesson').\
             replace('#date', row[0]).\
             replace('#time', row[1]).\
-            replace('#course', course.title())
+            replace('#course', row[3])
 
         await callback.message.answer(text,
                                       parse_mode=ParseMode.MARKDOWN)
@@ -157,11 +173,11 @@ async def confirm_to_open_lesson(callback: types.CallbackQuery):
     course = confirm_ol_cb.parse(callback.data)['submenu']
     user = db.select_user(id=callback.from_user.id)
     text = f"""
-    Клиент: {callback.message.from_user.mention} 
-    Записался на открытый урок по *{course.title()}*
-    Телефон клиента: {user[4]}
-    Имя клиента: {user[1]}
-    Дата отправки: {datetime.now().strftime("%d.%m.%Y %H:%M")}"""
+Клиент: {callback.from_user.mention} 
+Записался на открытый урок по *{course.title()}*
+Телефон клиента: {user[4]}
+Имя клиента: {user[1]}
+Дата отправки: {datetime.now().strftime("%d.%m.%Y %H:%M")}"""
 
     for manager in admins:
         await callback.bot.send_message(chat_id=manager,text=text, parse_mode=ParseMode.MARKDOWN)

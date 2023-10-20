@@ -21,6 +21,7 @@ class Texts:
                  "Bizning asosiy menyuda siz o'zingizni qiziqtirgan bo'limni tanlashingiz mumkin ⬇️:"
             ),
             "course": (
+                "<b>#course_name</b>\n\n"
                 "ℹ️<b> Kurs haqida umumiy ma’lumot</b>\n\n"
                 "#about"
                 "💼 <b>Karyera istiqboli</b>\n\n"
@@ -74,6 +75,7 @@ class Texts:
             "bedit_name": "🖊 Ismni o'zgartirish",
             "bto_main": "⬅ Orqaga",
             "iopen_lesson": "📅 Ochiq dars",
+            "iopen_lesson_vip": "📅 Ochiq darsga yozilish",
             "iget_in_touch": "🗣 Bog'lanish",
             "iabout_us": "Biz haqimizda ❓",
             "icantact": "Aloqa 📱",
@@ -91,7 +93,7 @@ class Texts:
             'ru': "Rus tili",
             'uz': "O'zbek tili",
             'en': "Ingliz tili",
-            'excuse_open_lesson': "Kechirasiz #course bo'yicha ochiq dars soat #time #date sanada bo'lib o'tdi",
+            'excuse_open_lesson': "Kechirasiz *#course* bo'yicha ochiq dars soat #time #date sanada bo'lib o'tdi",
             "lang_changed": "Til muvaffaqiyatli yangilandi",
             "name_changed": "Ismingiz muvaffaqiyatli o'zgartirildi!",
             'lstart': 'Botni ishga tushirish',
@@ -108,6 +110,7 @@ class Texts:
                 "В нашем главном меню вы можете выбрать интересующий вас раздел ⬇️ :"
             ),
             "course":(
+                "<b>#course_name</b>\n\n"
                 "ℹ️<b>Обзор курса</b>\n\n"
                 "#about"
                 "💼 <b>Карьерный путь</b>\n\n"
@@ -161,6 +164,7 @@ class Texts:
             "bedit_name": "🖊 Изменить имя",
             "bto_main": "⬅ Назад",
             "iopen_lesson": "📅 Открытый урок",
+            "iopen_lesson_vip": "📅 Записаться на открытые уроки",
             "iget_in_touch": "Связаться",
             "iabout_us": "О нас ❓",
             "icantact": "Контакты 📱",
@@ -178,7 +182,7 @@ class Texts:
             'ru': "Русский язык",
             'uz': "Узбекский язык",
             'en': "Английкий язык",
-            'excuse_open_lesson': "Извините, открытый урок по #course состоялся #date в #time",
+            'excuse_open_lesson': "Извините, открытый урок по *#course* состоялся #date в #time",
             "lang_changed": "Язык успешно обновлен",
             "name_changed": "Ваш имя успешно изменен!",
             'lstart': 'Запустить бота',
@@ -197,6 +201,7 @@ class Texts:
                  "In our main menu you can select the section you are interested in ⬇️:"
             ),
             "course":(
+                "<b>#course_name</b>\n\n"
                 "ℹ️<b>Course Overview</b>\n\n"
                 "#about"
                 "💼 <b>Career Pathways</b>\n\n"
@@ -252,6 +257,7 @@ class Texts:
             "bedit_name": "🖊 Edit name",
             "bto_main": "⬅ Back",
             "iopen_lesson": "📅 Open lesson",
+            "iopen_lesson_vip": "📅 Sign up for an open lesson",
             "iget_in_touch": "Contact us",
             "iabout_us": "About us ❓",
             "icantact": "Contacts 📱",
@@ -269,7 +275,7 @@ class Texts:
             'ru': "Russian",
             'uz': "Uzbek",
             'en': "English",
-            'excuse_open_lesson': "Sorry #course open class was held at #time on #date",
+            'excuse_open_lesson': "Sorry open class on *#course* was held at #time on #date",
             "lang_changed": "Language updated successfully",
             "name_changed": "Your name has been successfully changed!",
             'lstart': 'Run the bot',
