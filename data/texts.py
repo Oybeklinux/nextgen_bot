@@ -10,6 +10,14 @@ open_lesson_dates = {
 from aiogram.types import User
 
 
+async def _(key):
+    if User.get_current():
+        user_id = User.get_current().id
+        language = await db.select_user_language(user_id)
+        return Texts.strings[language][key]
+    else:
+        return Texts.strings['uz'][key]
+
 
 class Texts:
     strings = {
@@ -48,7 +56,7 @@ class Texts:
                  "📍 *Joylashuv:* \n"
                  "[Yandex](https://yandex.com/maps/-/CDUpMN~f) | [Google Maps](https://maps.app.goo.gl/QxA81NH4D5UDnGMTA)\n\n"
                  "*Ijtimoiy tarmoqlarimiz:*\n"
-                 "[Veb-sayt](https://nextgen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id=100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/)\n"
+                 "[Veb-sayt](https://ngen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id=100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/) | [Linkedin](https://www.linkedin.com/company/ngen-academy/)\n"
             ),
             "open_lesson": (
                     "Quyida *#course* kursi bo'yicha ochiq dars haqida ma'lumot keltirilgan. "
@@ -77,8 +85,9 @@ class Texts:
             "iopen_lesson": "📅 Ochiq dars",
             "iopen_lesson_vip": "📅 Ochiq darsga yozilish",
             "iget_in_touch": "🗣 Bog'lanish",
-            "iabout_us": "Biz haqimizda ❓",
-            "icantact": "Aloqa 📱",
+            "iabout_us": "❓ Biz haqimizda",
+            "icontact": "📱 Aloqa",
+            "iwebsite": "🌐 Veb sahifaga tashrif",
             "commands": ["*Buyruqlar ro'yxati*\n",
                          "/start - ishga tushirish",
                          "/help - ma'lumotnoma",
@@ -137,7 +146,7 @@ class Texts:
                 "📍 *Локация:* \n"
                 "[Yandex](https://yandex.com/maps/-/CDUpMN~f) | [Google Maps](https://maps.app.goo.gl/QxA81NH4D5UDnGMTA)\n\n"            
                 "*Наши социальные сети:*\n"
-                "[Website](https://nextgen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id=100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/)\n"
+                "[Website](https://ngen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id=100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/) | [Linkedin](https://www.linkedin.com/company/ngen-academy/)\n"
             ),
             "open_lesson": (
                      "Ниже представлена информация об открытом занятии по курсу *#course*"
@@ -166,8 +175,9 @@ class Texts:
             "iopen_lesson": "📅 Открытый урок",
             "iopen_lesson_vip": "📅 Записаться на открытые уроки",
             "iget_in_touch": "Связаться",
-            "iabout_us": "О нас ❓",
-            "icantact": "Контакты 📱",
+            "iabout_us": "❓ О нас",
+            "icontact": "📱 Контакты",
+            "iwebsite": "🌐 Посетить сайт",
             "commands": ["*Список команд*\n",
                          "/start - начать диалог",
                          "/help - получить справку",
@@ -231,7 +241,7 @@ class Texts:
                 "📍 *Location:* \n"
                 "[Yandex](https://yandex.com/maps/-/CDUpMN~f) | [Google Maps](https://maps.app.goo.gl/QxA81NH4D5UDnGMTA)\n\n"
                 "*Our social networks:*\n"
-                "[Website](https://nextgen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id= 100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/)\n"),
+                "[Website](https://ngen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id= 100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/) | [Linkedin](https://www.linkedin.com/company/ngen-academy/)\n"),
             "open_lesson": (
                     "The following is information about an open class for the *#course* course."
                      "\nPress the *#button* button to sign up for an open class\n\n"
@@ -259,8 +269,9 @@ class Texts:
             "iopen_lesson": "📅 Open lesson",
             "iopen_lesson_vip": "📅 Sign up for an open lesson",
             "iget_in_touch": "Contact us",
-            "iabout_us": "About us ❓",
-            "icantact": "Contacts 📱",
+            "iabout_us": "❓ About us",
+            "icontact": "📱 Contacts",
+            "iwebsite": "🌐 Visit our web-site",
             "commands": ["*Command list*\n",
                          "/start - start the bot",
                          "/help - get information",
@@ -288,13 +299,13 @@ class Texts:
     language_code = None
 
     @classmethod
-    def get(cls, key: str) -> str:
-        try:
-            user_id = User.get_current().id
-            language = db.select_user_language(user_id)
-        except:
-            language = 'uz'
-        return cls.strings[language][key]
+    # def get(cls, key: str) -> str:
+        # try:
+        #     user_id = User.get_current().id
+        #     language = 'ru'#await db.select_user_language(user_id)
+        # except:
+        #     language = 'uz'
+        # return cls.strings['uz'][key]
 
     @classmethod
     def get_list(cls, key: str) -> list:
@@ -363,12 +374,12 @@ class Text:
         }
     }
 
-    def __init__(self):
+    # def __init__(self):
         # language_code = User.get_current().language_code
-        user_id = User.get_current().id
-        language_code = db.select_user_language(id=user_id)
-        self.language_code = language_code if language_code == "ru" else "en"
+        # user_id = User.get_current().id
+        # language_code = await db.select_user_language(id=user_id)
+        # self.language_code = language_code if language_code == "ru" else "en"
 
-    def get(self, key: str) -> str:
-
-        return self.strings[self.language_code][key]
+    # def get(self, key: str) -> str:
+    #
+    #     return self.strings[self.language_code][key]

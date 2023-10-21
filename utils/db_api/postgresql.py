@@ -5,6 +5,7 @@ from random import random, randint, choice
 from typing import Union
 
 import asyncpg
+from aiogram.types import User
 from asyncpg import Pool, Connection
 
 from data import config
@@ -34,17 +35,14 @@ class Database:
         async with self.pool.acquire() as connection:
             connection: Connection
             async with connection.transaction():
-                try:
-                    if fetchone:
-                        result = await connection.fetchrow(command, *args)
-                    if fetchall:
-                        result = await connection.fetch(command, *args)
-                    if fetchval:
-                        result = await connection.fetchval(command, *args)
-                    if execute:
-                        result = await connection.execute(command, *args)
-                except Exception as error:
-                    raise Exception(error.__class__, error.args)
+                if fetchone:
+                    result = await connection.fetchrow(command, *args)
+                if fetchall:
+                    result = await connection.fetch(command, *args)
+                if fetchval:
+                    result = await connection.fetchval(command, *args)
+                if execute:
+                    result = await connection.execute(command, *args)
 
             return result
 
@@ -157,10 +155,10 @@ class Database:
             WHERE language=(select COALESCE(language,'uz') from users where id=$1) and lower(name)=lower($2)"""
         return await self.execute(sql, user_id, course, fetchone=True)
 
-    async def select_courses(self, user_id, only_name=False, only_desc=False,
+    async def select_courses(self,only_name=False, only_desc=False,
                              only_about=False,
                              inline_mode=False):
-
+        user_id = User.get_current().id
         if only_name:
             sql = "SELECT name FROM courses WHERE language=(select COALESCE(language,'uz') from users where id=$1)"
             return await self.execute(sql, user_id, fetchall=True)
@@ -193,19 +191,21 @@ class Database:
 
     # OPEN LESSON USERS
     async def insert_open_lesson_users(self, user_id, open_lesson_id=None, course_name=None):
+
         if not open_lesson_id and not course_name:
             raise Exception("at least two arguments should be provided")
         if not course_name:
             sql = "INSERT INTO open_lesson_users(user_id,open_lesson_id) VALUES($1,$2)"
-            await self.execute(sql, user_id, open_lesson_id, execute=True)
+            result = await self.execute(sql, user_id, open_lesson_id, execute=True)
         elif not open_lesson_id:
             sql = """INSERT INTO open_lesson_users(user_id, course_name)
-            VALUES($1,(select id from courses where lower($2)=lower(name)))"""
-            await self.execute(sql, user_id, course_name, execute=True)
+            VALUES($1,$2)"""
+            result = await self.execute(sql, user_id, course_name, execute=True)
         else:
             sql = """INSERT INTO open_lesson_users(user_id,open_lesson_id, course_name)
             VALUES($1,$2,$3)"""
-            await self.execute(sql, user_id, open_lesson_id, course_name, execute=True)
+            result = await self.execute(sql, user_id, open_lesson_id, course_name, execute=True)
+        print("result: ", result)
 
     async def get_open_lesson_users(self, course=None):
         if not course:
@@ -266,19 +266,19 @@ async def test_courses():
     await db.update_user(id=user_id,language=language)
 
     print('Only courses name')
-    names = await db.select_courses(user_id, only_name=True)
+    names = await db.select_courses(only_name=True)
     for name in names:
         print(name)
     print('Only courses description')
-    names = await db.select_courses(user_id, only_desc=True)
+    names = await db.select_courses(only_desc=True)
     for name in names:
         print(name)
     print('Only courses about')
-    names = await db.select_courses(user_id, only_about=True)
+    names = await db.select_courses(only_about=True)
     for name in names:
         print(name)
     print('Courses inline mode')
-    names = await db.select_courses(user_id,inline_mode=True)
+    names = await db.select_courses(inline_mode=True)
     for name in names:
         print(name)
 

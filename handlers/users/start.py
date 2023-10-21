@@ -1,9 +1,8 @@
-import sqlite3
-
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
+from asyncpg import UniqueViolationError
 
-from data.texts import Texts
+from data.texts import _
 from keyboards import language_ikb, get_main_kb
 from loader import dp, db
 
@@ -13,10 +12,10 @@ async def bot_start(message: types.Message):
     user_id = message.from_user.id
 
     try:
-        db.add_user(id=user_id, name=message.from_user.full_name)
-    except sqlite3.IntegrityError:
+        await db.add_user(id=user_id, name=message.from_user.full_name)
+    except UniqueViolationError:
         pass
-    user = db.select_user(id=user_id)
+    user = await db.select_user(id=user_id)
     name = user[1]
     text = (
         "🇺🇿 Assalomu alaykum #full_name 👋! Men NextGen Academy botiman.\n"
@@ -27,10 +26,10 @@ async def bot_start(message: types.Message):
         "Select your language to sign up\n\n"
     ).replace("#full_name", name)
 
-    if not db.is_user_registered(user_id):
+    if not await db.is_user_registered(user_id):
         # text += "Для регистрации выберите пожалуйста свой язык"
         await message.answer(f'{text}', reply_markup=language_ikb)
     else:
         # text = Texts().get("start").replace("full_name", message.from_user.full_name)
-        await message.answer(Texts.get('tmain_menu'), reply_markup=get_main_kb())
+        await message.answer(await _('tmain_menu'), reply_markup=await get_main_kb())
 

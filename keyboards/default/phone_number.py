@@ -1,11 +1,12 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from data.texts import Texts
+
+from data.texts import _
 
 
-def get_phone_kb():
+async def get_phone_kb():
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text=Texts.get('bsend_phone'), request_contact=True)],
+            [KeyboardButton(text=await _('bsend_phone'), request_contact=True)],
 
         ], resize_keyboard=True
     )

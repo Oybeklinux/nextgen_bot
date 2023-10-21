@@ -6,8 +6,7 @@ from loader import dp, db
 # Главное -> Курсы 💻 -> Поиск
 @dp.inline_handler(text='')
 async def search(query: types.InlineQuery):
-    user_id = query.from_user.id
-    rows = db.select_courses(user_id, inline_mode=True)
+    rows = await db.select_courses(inline_mode=True)
     results = []
     for row in rows:
         results.append(

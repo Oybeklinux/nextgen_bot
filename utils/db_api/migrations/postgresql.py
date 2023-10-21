@@ -980,5 +980,8 @@ Topics covered in the course include an introduction to Dart language, understan
 ');
 COMMIT;
 """
+    ],
+    4: [
+        """ALTER TABLE open_lesson_users ADD COLUMN date TIMESTAMP default now()"""
     ]
 }

@@ -7,7 +7,7 @@ class IsIn(Filter):
 
     def __init__(self, my_text: str) -> None:
         # get uz,ru,en translations
-        self.my_text = Texts().get_list(my_text)
+        self.my_text = Texts.get_list(my_text)
 
     async def check(self, message: Message):
         # check if text is in the list

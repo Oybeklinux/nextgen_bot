@@ -3,9 +3,12 @@ from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher import filters
 from aiogram.types import ParseMode
 from data.config import admins
+from data.texts import _
 from filters.is_in import IsIn
 from keyboards import *
 from datetime import datetime
+
+from keyboards.inline.open_lessons import get_open_lessons, open_lessons_cb
 from loader import dp, db
 
 
@@ -14,8 +17,9 @@ async def courses_selected(message: types.Message):
     selected_course = message.text.replace('#', '').replace('course_', '').lower()
     user_id = message.from_user.id
     print(f"user_id: {user_id}, selected_course: {selected_course}")
-    row = db.select_course_by_name(user_id, name=selected_course)
-    text = Texts.get('course').\
+    row = await db.select_course_by_name(user_id, name=selected_course)
+    text = await _('course')
+    text = text.\
         replace('#about', f'{row[3]}\n\n').\
         replace('#career', f'{row[4]}\n\n').\
         replace('#for_whom', f'{row[5]}\n\n').\
@@ -26,7 +30,7 @@ async def courses_selected(message: types.Message):
     await message.delete()
 
     await message.answer(text=text,
-                         reply_markup=get_course_ikb(selected_course),
+                         reply_markup=await get_general_ikb(selected_course),
                          parse_mode=ParseMode.HTML)
 
 
@@ -40,14 +44,14 @@ async def back_to_course(callback: types.CallbackQuery) -> None:
 @dp.message_handler(IsIn("bcourses"))
 @dp.message_handler(Command('courses'))
 async def send_main_menu(message: types.Message) -> None:
-    user_id = message.from_user.id
-    rows = db.select_courses(user_id, only_desc=True)
+    rows = await db.select_courses(only_desc=True)
     text = ''
     for row in rows:
         text += f"🔹 *{row[2]}*. {row[1]}\n"
     text = text.strip()
-    text = Texts.get("courses").replace("#courses", text)
-    await message.answer(text, reply_markup=get_main_ikb(), parse_mode=ParseMode.MARKDOWN)
+    text = (await _("courses")).replace("#courses", text)
+
+    await message.answer(text, reply_markup=await get_main_ikb(), parse_mode=ParseMode.MARKDOWN)
 
 
 # Главное -> IT-тест 🧠
@@ -62,9 +66,10 @@ async def about_us(callback: types.CallbackQuery):
     about_url = 'https://telegra.ph/file/0f8ae82aa7617e7164431.png'
     await callback.message.answer_video(
         video='https://telegra.ph//file/b58dd2c66ab9cbce1ffa7.mp4',
-        caption=Texts.get('about_us'),
+        caption=await _('about_us'),
         parse_mode=ParseMode.MARKDOWN,
-        reply_markup=get_back_to_course_ikb())
+        reply_markup=await get_back_to_course_ikb())
+    await callback.answer()
 
 
 # Главное -> Контакты 📱"
@@ -72,75 +77,80 @@ async def about_us(callback: types.CallbackQuery):
 async def contacts(callback: types.CallbackQuery):
     await callback.message.answer_photo(
         photo='https://telegra.ph/file/0f8ae82aa7617e7164431.png',
-        caption=Texts.get("contact"),
-        parse_mode=ParseMode.MARKDOWN, reply_markup=get_back_to_course_ikb())
+        caption=await _("contact"),
+        parse_mode=ParseMode.MARKDOWN, reply_markup=await get_back_to_course_ikb())
+    await callback.answer()
+
+# Главное -> Открытые уроки 📌"
+@dp.callback_query_handler(maincb.filter(submenu='open_lessons'))
+async def open_lessons(callback: types.CallbackQuery):
+    await callback.message.answer(text="Sizni qaysi kurs bo'yicha ochiq dars qiziqtiradi?",
+                                  reply_markup=await get_open_lessons())
 
 
-# # Главное -> Открытые уроки 📌"
-# @dp.callback_query_handler(maincb.filter(submenu='open_lessons'))
-# async def open_lessons(callback: types.CallbackQuery):
-#
-#     await callback.message.answer(f"Вы вибрали Открытые уроки по 📌")
+# Главное -> Посетить сайть 🌐"
+@dp.callback_query_handler(maincb.filter(submenu='web_site'))
+async def web_site(callback: types.CallbackQuery):
+    await callback.message.answer("Вы выбрали Посетить сайть 🌐")
 
 
-# # Главное -> Посетить сайть 🌐"
-# @dp.callback_query_handler(maincb.filter(submenu='web_site'))
-# async def web_site(callback: types.CallbackQuery):
-#     await callback.message.answer("Вы вибрали Посетить сайть 🌐")
-
-
-@dp.callback_query_handler(register_ol_cb.filter(submenu="course_content"))
+@dp.callback_query_handler(general_cb.filter(submenu="course_content"))
 async def course_curriculum(callback: types.CallbackQuery) -> None:
-    course = register_ol_cb.parse(callback.data)['course']
+    course = general_cb.parse(callback.data)['course']
     user_id = callback.from_user.id
 
-    text = db.select_course_curriculum(user_id, course)
+    text = await db.select_course_curriculum(user_id, course)
     if text:
-        await callback.message.answer(f"*{Texts.get('icourse_content')}*\n\n{text[0]}",
-                                  reply_markup=get_back_to_course_ikb(),
+        await callback.message.answer(f"*{await _('icourse_content')}*\n\n{text[0]}",
+                                  reply_markup=await get_back_to_course_ikb(),
                                   parse_mode=ParseMode.MARKDOWN)
 
 
-@dp.callback_query_handler(register_ol_cb.filter(submenu="course_objective"))
+@dp.callback_query_handler(general_cb.filter(submenu="course_objective"))
 async def course_objective(callback: types.CallbackQuery) -> None:
     user_id = callback.from_user.id
-    course = register_ol_cb.parse(callback.data)['course']
-    text = db.select_course_objective(user_id, course)
+    course = general_cb.parse(callback.data)['course']
+    text = await db.select_course_objective(user_id, course)
     if text:
-        await callback.message.answer(f"*{Texts.get('icourse_objective')}*\n\n{text[0]}",
-                                  reply_markup=get_back_to_course_ikb(),
+        await callback.message.answer(f"*{await _('icourse_objective')}*\n\n{text[0]}",
+                                  reply_markup=await get_back_to_course_ikb(),
                                   parse_mode=ParseMode.MARKDOWN)
 
 
-@dp.callback_query_handler(register_ol_cb.filter(submenu='register_to_open_lesson_vip'))
+@dp.callback_query_handler(general_cb.filter(submenu='register_to_open_lesson_vip'))
 async def confirm_to_open_lesson(callback: types.CallbackQuery):
-    course = register_ol_cb.parse(callback.data)['course']
-    user = db.select_user(id=callback.from_user.id)
+    data = general_cb.parse(callback.data)
+    course = data['course']
+    if data['is_menu']:
+        await callback.message.delete()
+    await callback.answer()
+    user = await db.select_user(id=callback.from_user.id)
     text = f"""
     Клиент: {callback.from_user.mention} 
     Записался на открытый урок по *{course.title()}*
     Телефон клиента: {user[4]}
     Имя клиента: {user[1]}
-    Дата отправки: {datetime.now().strftime("%d.%m.%Y %H:%M")}"""
-    db.insert_open_lesson_users(user_id=callback.from_user.id, course_name=course)
+    Дата записи: {datetime.now().strftime("%d.%m.%Y %H:%M")}"""
+    await db.insert_open_lesson_users(user_id=callback.from_user.id, course_name=course)
     for manager in admins:
         await callback.bot.send_message(chat_id=manager, text=text, parse_mode=ParseMode.MARKDOWN)
 
-    await callback.message.answer(text=Texts.get("open_lesson_confirm"))
+    await callback.message.answer(text=await _("open_lesson_confirm"))
 
 
 # registering to open class
-@dp.callback_query_handler(register_ol_cb.filter(submenu='register_to_open_lesson'))
+@dp.callback_query_handler(general_cb.filter(submenu='register_to_open_lesson'))
 async def confirm_to_open_lesson(callback: types.CallbackQuery):
-    course = register_ol_cb.parse(callback.data)['course']
+    data = general_cb.parse(callback.data)
+    course = data['course']
 
-    row = db.select_open_lesson(course=course)
+    row = await db.select_open_lesson(course=course)
 
     datetime_str = f'{row[0]} {row[1]}'
     datetime_object = datetime.strptime(datetime_str, '%d.%m.%Y %H:%M')
 
     if datetime_object < datetime.now():
-        text = Texts.get('excuse_open_lesson').\
+        text = await _('excuse_open_lesson').\
             replace('#date', row[0]).\
             replace('#time', row[1]).\
             replace('#course', row[3])
@@ -149,12 +159,12 @@ async def confirm_to_open_lesson(callback: types.CallbackQuery):
                                       parse_mode=ParseMode.MARKDOWN)
         return
 
-    text = Texts.get('open_lesson').\
+    text = await _('open_lesson').\
         replace('#course', course.title()).\
         replace('#date', row[0]).\
         replace('#time', row[1]).\
-        replace('#button', Texts.get('iconfirm')).\
-        replace('#language', Texts.get(row[2]))
+        replace('#button', await _('iconfirm')).\
+        replace('#language', await _(row[2]))
 
     if row:
         await callback.message.answer(text,
@@ -171,7 +181,7 @@ async def confirm_to_open_lesson(callback: types.CallbackQuery):
 @dp.callback_query_handler(confirm_ol_cb.filter())
 async def confirm_to_open_lesson(callback: types.CallbackQuery):
     course = confirm_ol_cb.parse(callback.data)['submenu']
-    user = db.select_user(id=callback.from_user.id)
+    user = await db.select_user(id=callback.from_user.id)
     text = f"""
 Клиент: {callback.from_user.mention} 
 Записался на открытый урок по *{course.title()}*
@@ -182,7 +192,7 @@ async def confirm_to_open_lesson(callback: types.CallbackQuery):
     for manager in admins:
         await callback.bot.send_message(chat_id=manager,text=text, parse_mode=ParseMode.MARKDOWN)
 
-    await callback.message.answer(text=Texts.get("open_lesson_confirm"))
+    await callback.message.answer(text=await _("open_lesson_confirm"))
     await callback.message.delete()
 
 
