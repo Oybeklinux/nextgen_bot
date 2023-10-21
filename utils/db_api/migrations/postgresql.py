@@ -516,7 +516,7 @@ Qo''shimcha modullar marshrutlash, bleyd shablonlari, forma so''rovlari va Larav
 
 ✅ Veb dasturlashda muammolarni hal qilish va kodlash samaradorligini oshirish
 
-',1800000,'https://telegra.ph/file/62bb42714b939611154db.png','PHP va Laravel bilan veb ilovalarni yaratish'),
+',1800000,'https://telegra.ph/file/0e21628945a0fe4bd0417.png','PHP va Laravel bilan veb ilovalarni yaratish'),
  (6,'Php','Разработка веб-приложений на языке php','ru','Курс «Создание веб-приложений с помощью PHP и Laravel» представляет собой интерактивную комплексную программу, предназначенную для того, чтобы дать учащимся навыки, необходимые для создания динамических веб-приложений с использованием PHP и Laravel.
 
 
@@ -631,7 +631,7 @@ Qo''shimcha modullar marshrutlash, bleyd shablonlari, forma so''rovlari va Larav
 
 ✅ Улучшить навыки решения проблем и эффективности кодирования в веб-разработке.
 
-',1800000,'https://telegra.ph/file/62bb42714b939611154db.png','Создание веб-приложений с помощью PHP и Laravel'),
+',1800000,'https://telegra.ph/file/0e21628945a0fe4bd0417.png','Создание веб-приложений с помощью PHP и Laravel'),
  (7,'Php','Development of web applications in PHP language','en','The Building Web Applications with PHP and Laravel course is an interactive and comprehensive program designed to equip learners with the skills needed to create dynamic web applications using PHP and Laravel.
 
 
@@ -744,7 +744,7 @@ Additional modules provide in-depth exploration of routing, blade templating, fo
 
 ✅ Enhance problem-solving skills and coding efficiency in web development
 
-',1800000,'https://telegra.ph/file/62bb42714b939611154db.png','Building Web Applications with PHP and Laravel'),
+',1800000,'https://telegra.ph/file/0e21628945a0fe4bd0417.png','Building Web Applications with PHP and Laravel'),
  (8,'Flutter','Turli xil operatsion tizimlar uchun ilovalarni ishlab chiqish','uz','Flutter va Dart yordamida ilovalarni ishlab chiqish kursi mashhur Flutter SDK va Dart dasturlash tilini chuqur va har tomonlama tushunish imkonini beradi. Ushbu kurs o’rganuvchilarga oddiy kod bazasidan foydalangan holda Android va iOS platformalari uchun chiroyli, samarali va funksional mobil ilovalarni yaratish jarayoni bo''yicha yo''l-yo''riq beradi.
 
 
