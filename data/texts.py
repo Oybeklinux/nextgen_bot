@@ -298,7 +298,7 @@ class Texts:
 
     language_code = None
 
-    @classmethod
+    # @classmethod
     # def get(cls, key: str) -> str:
         # try:
         #     user_id = User.get_current().id
@@ -307,9 +307,9 @@ class Texts:
         #     language = 'uz'
         # return cls.strings['uz'][key]
 
-    @classmethod
-    def get_list(cls, key: str) -> list:
-        return [cls.strings['uz'][key], cls.strings['ru'][key], cls.strings['en'][key]]
+    @staticmethod
+    def get_list(key: str) -> list:
+        return [Texts.strings['uz'][key], Texts.strings['ru'][key], Texts.strings['en'][key]]
 
 
 class Text:
