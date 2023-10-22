@@ -57,10 +57,8 @@ class Database:
                 continue
 
             for sql in sqls:
-                try:
-                    await self.execute(sql, execute=True)
-                except Exception as error:
-                    print(error.__class__, error.args, error.with_traceback())
+                print(f'============{sql}==============')
+                await self.execute(sql, execute=True)
 
             await self.insert_migrations(version)
 
