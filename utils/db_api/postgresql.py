@@ -57,8 +57,12 @@ class Database:
                 continue
 
             for sql in sqls:
-                await self.execute(sql, execute=True)
-        await self.insert_migrations(version)
+                try:
+                    await self.execute(sql, execute=True)
+                except Exception as error:
+                    print(error.__class__, error.args, error.with_traceback())
+
+            await self.insert_migrations(version)
 
     async def last_migrate_version(self):
         sql = "SELECT max(version) from migrations"
