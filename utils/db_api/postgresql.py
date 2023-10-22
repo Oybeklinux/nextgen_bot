@@ -71,8 +71,9 @@ class Database:
         return True if self.execute(sql, version, fetchone=True) else False
 
     async def insert_migrations(self, version):
-        sql = "insert into migrations (version) values($1) ON CONFLICT DO NOTHING"
-        await self.execute(sql, version, execute=True)
+        if not await self.if_exist_migrations(version):
+            sql = "insert into migrations (version) values($1)"
+            await self.execute(sql, version, execute=True)
 
     # EXTRA FUNCTIONS
     @staticmethod
