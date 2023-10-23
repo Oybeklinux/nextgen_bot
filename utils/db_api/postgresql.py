@@ -108,7 +108,7 @@ class Database:
         sql = f"""SELECT language FROM users WHERE id=$1"""
         row = await self.execute(sql, id, fetchone=True)
         if not row:
-            return None
+            return 'uz'
         return row[0]
 
     async def select_count(self):
