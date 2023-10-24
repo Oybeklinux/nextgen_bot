@@ -68,7 +68,7 @@ class Database:
 
     async def if_exist_migrations(self, version):
         sql = 'select * from migrations where version=$1'
-        return True if self.execute(sql, version, fetchone=True) else False
+        return True if await self.execute(sql, version, fetchone=True) else False
 
     async def insert_migrations(self, version):
         if not await self.if_exist_migrations(version):
