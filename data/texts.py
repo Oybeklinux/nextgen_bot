@@ -1,13 +1,6 @@
+from aiogram.types import User
 
 from loader import db
-
-open_lesson_dates = {
-    "python": {"date": "14.10.2023", "time": "17:00"},
-    "flutter": {"date": "Уже прошло", "time": ""},
-    "php": {"date": "Не определено", "time": ""}
-}
-
-from aiogram.types import User
 
 
 async def _(key):
@@ -22,11 +15,11 @@ async def _(key):
 class Texts:
     strings = {
         "uz": {
-            "courses":(
+            "courses": (
                 "*Bizning kurslarimiz:*\n\n"
-                 "#courses\n\n"
-                 "To'g'ri kursni tanlashga yordam berish uchun biz bepul ochiq darslarni o'tkazamiz, unda siz o'quv reja bilan tanishishingiz, o'qituvchi bilan tanishishingiz va ro'yxatdan o'tishingiz mumkin.😉\n\n"
-                 "Bizning asosiy menyuda siz o'zingizni qiziqtirgan bo'limni tanlashingiz mumkin ⬇️:"
+                "#courses\n\n"
+                "To'g'ri kursni tanlashga yordam berish uchun biz bepul ochiq darslarni o'tkazamiz, unda siz o'quv reja bilan tanishishingiz, o'qituvchi bilan tanishishingiz va ro'yxatdan o'tishingiz mumkin.😉\n\n"
+                "Bizning asosiy menyuda siz o'zingizni qiziqtirgan bo'limni tanlashingiz mumkin ⬇️:"
             ),
             "course": (
                 "<b>#course_name</b>\n\n"
@@ -48,32 +41,32 @@ class Texts:
             ),
             "contact": (
                 "🏙 *Bizning manzil:*\n"
-                 "Toshkent sh., Moʻminova ko'chasi bino 4\\1, 100041. \nAloqabank binosi, 16-qavat. \nOrientir: INHA universiteti\n\n\n"
-                 "☎ *Kontaktlar:*\n"
-                 "Telegram: [nextgen_admin](https://t.me/kamilaa3)\n"
-                 "Tel: +998 55-515-99-00\n"
-                 "Elektron pochta: nextgenacademyuzb@gmail.com\n\n"
-                 "📍 *Joylashuv:* \n"
-                 "[Yandex](https://yandex.com/maps/-/CDUpMN~f) | [Google Maps](https://maps.app.goo.gl/QxA81NH4D5UDnGMTA)\n\n"
-                 "*Ijtimoiy tarmoqlarimiz:*\n"
-                 "[Veb-sayt](https://ngen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id=100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/) | [Linkedin](https://www.linkedin.com/company/ngen-academy/)\n"
+                "Toshkent sh., Moʻminova ko'chasi bino 4\\1, 100041. \nAloqabank binosi, 16-qavat. \nOrientir: INHA universiteti\n\n\n"
+                "☎ *Kontaktlar:*\n"
+                "Telegram: [nextgen_admin](https://t.me/kamilaa3)\n"
+                "Tel: +998 55-515-99-00\n"
+                "Elektron pochta: nextgenacademyuzb@gmail.com\n\n"
+                "📍 *Joylashuv:* \n"
+                "[Yandex](https://yandex.com/maps/-/CDUpMN~f) | [Google Maps](https://maps.app.goo.gl/QxA81NH4D5UDnGMTA)\n\n"
+                "*Ijtimoiy tarmoqlarimiz:*\n"
+                "[Veb-sayt](https://ngen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id=100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/) | [Linkedin](https://www.linkedin.com/company/ngen-academy/)\n"
             ),
             "open_lesson": (
-                    "Quyida *#course* kursi bo'yicha ochiq dars haqida ma'lumot keltirilgan. "
-                    "\nOchiq darsga yozilish uchun *#button* tugmasini bosing\n\n"
-                    
-                    "📆 *Sanasi*: #date\n"
-                    "🕰 *Vaqti*: #time\n"
-                    "🇺🇿 *Tili*: #language\n"
-                    "❗ *Format*: oflayn"
-                ),
+                "Quyida *#course* kursi bo'yicha ochiq dars haqida ma'lumot keltirilgan. "
+                "\nOchiq darsga yozilish uchun *#button* tugmasini bosing\n\n"
+
+                "📆 *Sanasi*: #date\n"
+                "🕰 *Vaqti*: #time\n"
+                "🇺🇿 *Tili*: #language\n"
+                "❗ *Format*: oflayn"
+            ),
             "open_lesson_confirm": (
                 "Menejerimiz tez orada siz bilan bog'lanib, barcha savollaringizga javob berishini kuting.😊"
             ),
             "send_phone": (
                 "*📱 Raqamni yuborish* tugmasini bosib telefon raqamingizni yuboring"
             ),
-            "bsend_phone" : ("📱 Raqamni yuborish"),
+            "bsend_phone": ("📱 Raqamni yuborish"),
             "tinput_name": ("Iltimos, ismingizni kiriting"),
             "tsignup_info": ("Siz muvaffaqiyatli ro'yxatdan o'tdingiz!"),
             "tmain_menu": "Asosiy menyu",
@@ -108,8 +101,19 @@ class Texts:
             'lstart': 'Botni ishga tushirish',
             'lhelp': 'Yordam',
             'lcourses': 'Kurs haqida',
-            'lsettings': 'Sozlamalar'
-
+            'lsettings': 'Sozlamalar',
+            'bсontest': '🏆 Tanlovda qatnashish',
+            'mcontenst_number': 'Sizning raqamingiz: #number',
+            'bсontest_users': '👨‍👧‍👦 Qatnashuvchilar',
+            'bstart': '⏱ Tanlovni boshlash',
+            'random_choice': '🎲 Tasodifiy tanlash',
+            'bstop': "🛑 Tanlovni to'xtatish",
+            "wait_contest": "*💥 Tanlov boshlandi 💥* degan habardan keyin *🏆 Tanlovda qatnashish* tugmasini bosing",
+            "participating_not_allowed": "Siz avvalgi tanlovda g'olib bo'lgansiz 😊. Shuning uchun bu tanlovda qatnasha olmaysiz",
+            "show_winner": "Tasodifiy tanlash yo'li bilan tanlovda quyidagi ishtirokchi g'olib bo'ldi\n*ID*:#id\n*Ismi*:#name",
+            "contest_started": '💥 Tanlov boshlandi 💥',
+            "contest_stopped": 'Tanlov tugadi',
+            "no_participants": "Ishtirokchilar qolmadi"
         },
         "ru": {
             "courses": (
@@ -118,7 +122,7 @@ class Texts:
                 "Чтобы помочь вам выбрать подходящий курс, мы проводим бесплатные открытые уроки, где вы узнаете о программе обучения, познакомитесь с преподавателем и сможете записаться.😉\n\n"
                 "В нашем главном меню вы можете выбрать интересующий вас раздел ⬇️ :"
             ),
-            "course":(
+            "course": (
                 "<b>#course_name</b>\n\n"
                 "ℹ️<b>Обзор курса</b>\n\n"
                 "#about"
@@ -131,32 +135,32 @@ class Texts:
             ),
 
             "about_us": (
-                "🔝*NextGen Academy* - первая международная IT академия в Узбекистане, открытая в рамках сотрудничества с Американским Международным Университетом в Бангладеш (AIUB), Институтом Непрерывного Образования (ICE) при AIUB и IT Парком Узбекистана в 2022 году.\n\n" 
+                "🔝*NextGen Academy* - первая международная IT академия в Узбекистане, открытая в рамках сотрудничества с Американским Международным Университетом в Бангладеш (AIUB), Институтом Непрерывного Образования (ICE) при AIUB и IT Парком Узбекистана в 2022 году.\n\n"
                 "🤝NextGen Academy  является партнером международных вендоров как *Python institute*, *JS institute*, *Cisco Networking Academy*, *Fortinet*. Это партнерство позволяет студентам получить качественное обучение по международным программам, а также дает возможность для получения сертификатa международного образца.\n\n"
-                "🖊Наша академия посвящена передаче знаний, навыков и практического и международного опыта, необходимых для успешной карьеры в быстро развивающейся IT - индустрии.\n\n" 
+                "🖊Наша академия посвящена передаче знаний, навыков и практического и международного опыта, необходимых для успешной карьеры в быстро развивающейся IT - индустрии.\n\n"
                 "📉Мы стремимся сократить разрыв между требованиями промышленности и доступными кадрами, предоставляя  всеобъемлющие программы, отвечающие растущему спросу на квалифицированных IT - специалистов *в Узбекистане и мировом рынке*\n\n"
             ),
             "contact": (
                 "🏙 *Наш адрес:*\n"
-                "г. Ташкент, Муминова, 4\1, 100041. Здания Aloqabank , 16-этаж. Ориентир: Университет INHA\n\n\n"                       
+                "г. Ташкент, Муминова, 4\1, 100041. Здания Aloqabank , 16-этаж. Ориентир: Университет INHA\n\n\n"
                 "☎ *Контакты:*\n"
                 "Telegram: [nextgen_admin](https://t.me/kamilaa3)\n"
                 "Тел: +998 55-515-99-00\n"
-                "Email: nextgenacademyuzb@gmail.com\n\n"        
+                "Email: nextgenacademyuzb@gmail.com\n\n"
                 "📍 *Локация:* \n"
-                "[Yandex](https://yandex.com/maps/-/CDUpMN~f) | [Google Maps](https://maps.app.goo.gl/QxA81NH4D5UDnGMTA)\n\n"            
+                "[Yandex](https://yandex.com/maps/-/CDUpMN~f) | [Google Maps](https://maps.app.goo.gl/QxA81NH4D5UDnGMTA)\n\n"
                 "*Наши социальные сети:*\n"
                 "[Website](https://ngen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id=100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/) | [Linkedin](https://www.linkedin.com/company/ngen-academy/)\n"
             ),
             "open_lesson": (
-                     "Ниже представлена информация об открытом занятии по курсу *#course*"
-                     "\nНажмите кнопку *#button*, чтобы записаться на открытое занятие\n\n"
-                    
-                     "📆 *Дата*: #date\n"
-                     "🕰 *Время*: #time\n"
-                     "🇺🇿 *Язык*: #language\n"
-                     "❗ *Формат*: офлайн"
-                ),
+                "Ниже представлена информация об открытом занятии по курсу *#course*"
+                "\nНажмите кнопку *#button*, чтобы записаться на открытое занятие\n\n"
+
+                "📆 *Дата*: #date\n"
+                "🕰 *Время*: #time\n"
+                "🇺🇿 *Язык*: #language\n"
+                "❗ *Формат*: офлайн"
+            ),
             "open_lesson_confirm": (
                 "Ожидайте, наш менеджер свяжется с вами в ближайшее время и ответит на все ваши вопросы.😊"
             ),
@@ -197,20 +201,30 @@ class Texts:
             "name_changed": "Ваш имя успешно изменен!",
             'lstart': 'Запустить бота',
             'lhelp': 'Помощь',
-            'lcourses':'Информация о курсах',
-            'lsettings': 'Настройки'
-
-
+            'lcourses': 'Информация о курсах',
+            'lsettings': 'Настройки',
+            'bсontest': '🏆 Принять участие в конкурсе',
+            'mcontenst_number': 'Ваш номер: #number',
+            'bсontest_users': '👨‍👧‍👦 Участники',
+            'bstart': '✅ Начать соревнование',
+            'random_choice': '🎲 Случайный выбор',
+            'bstop': "🛑 Остановить выбор",
+            "wait_contest": "После сообщения *💥 Конкурс начался 💥* нажмите кнопку *🏆 Принять участие в конкурсе*",
+            "participating_not_allowed": "Вы выиграли предыдущий конкурс 😊. Поэтому вы не можете участвовать в этом конкурсе",
+            "show_winner": "Следующий участник выиграл конкурс случайным выбором\n*ID*:#id\n*Имя*:#name",
+            "contest_started": "💥 Конкурс начался 💥",
+            "contest_stopped": "Конкурс окончен",
+            "no_participants": "Участников не осталось "
         },
         "en": {
 
             "courses": (
                 "*Our courses:*\n\n"
-                 "#courses\n\n"
-                 "To help you choose the right course, we hold free open lessons where you can learn about the curriculum, meet the teacher and be able to enroll.😉\n\n"
-                 "In our main menu you can select the section you are interested in ⬇️:"
+                "#courses\n\n"
+                "To help you choose the right course, we hold free open lessons where you can learn about the curriculum, meet the teacher and be able to enroll.😉\n\n"
+                "In our main menu you can select the section you are interested in ⬇️:"
             ),
-            "course":(
+            "course": (
                 "<b>#course_name</b>\n\n"
                 "ℹ️<b>Course Overview</b>\n\n"
                 "#about"
@@ -243,14 +257,14 @@ class Texts:
                 "*Our social networks:*\n"
                 "[Website](https://ngen.uz/) | [Telegram](https://t.me/nextgenacademyuz) | [Facebook](https://www.facebook.com/profile.php?id= 100090080721603) | [Instagram](https://www.instagram.com/ngen.uz/) | [Linkedin](https://www.linkedin.com/company/ngen-academy/)\n"),
             "open_lesson": (
-                    "The following is information about an open class for the *#course* course."
-                     "\nPress the *#button* button to sign up for an open class\n\n"
-                    
-                     "📆 *Date*: #date\n"
-                     "🕰 *Time*: #time\n"
-                     "🇺🇿 *Language*: #language\n"
-                     "❗ *Format*: offline"
-                ),
+                "The following is information about an open class for the *#course* course."
+                "\nPress the *#button* button to sign up for an open class\n\n"
+
+                "📆 *Date*: #date\n"
+                "🕰 *Time*: #time\n"
+                "🇺🇿 *Language*: #language\n"
+                "❗ *Format*: offline"
+            ),
             "open_lesson_confirm": (
                 "enОжидайте, наш менеджер свяжется с вами в ближайшее время и ответит на все ваши вопросы.😊"
             ),
@@ -292,20 +306,24 @@ class Texts:
             'lstart': 'Run the bot',
             'lhelp': 'Help',
             'lcourses': 'Course information',
-            'lsettings': 'Settings'
+            'lsettings': 'Settings',
+            'bсontest': '🏆 Participate in the contest',
+            'mcontenst_number': 'Your number is: #number',
+            'bсontest_users': '👨‍👧‍👦 Participants',
+            'bstart': '✅ Start contest',
+            'random_choice': '🎲 Random selection',
+            'bstop': "🛑 Stop Selection",
+            "wait_contest": "Press the *🏆 Participate in the contest* button when you get *💥 The contest has started 💥* message",
+            "participating_not_allowed": "You won the previous contest 😊. That's why you can't participate in this contest",
+            "show_winner": "The following entrant has won the contest by random selection\n*ID*:#id\n*Name*:#name",
+            "contest_started": '💥 The contest has started 💥',
+            "contest_stopped": 'The contest is over',
+            "no_participants": "No participants left"
+
         }
     }
 
     language_code = None
-
-    # @classmethod
-    # def get(cls, key: str) -> str:
-        # try:
-        #     user_id = User.get_current().id
-        #     language = 'ru'#await db.select_user_language(user_id)
-        # except:
-        #     language = 'uz'
-        # return cls.strings['uz'][key]
 
     @staticmethod
     def get_list(key: str) -> list:
@@ -375,10 +393,10 @@ class Text:
     }
 
     # def __init__(self):
-        # language_code = User.get_current().language_code
-        # user_id = User.get_current().id
-        # language_code = await db.select_user_language(id=user_id)
-        # self.language_code = language_code if language_code == "ru" else "en"
+    # language_code = User.get_current().language_code
+    # user_id = User.get_current().id
+    # language_code = await db.select_user_language(id=user_id)
+    # self.language_code = language_code if language_code == "ru" else "en"
 
     # def get(self, key: str) -> str:
     #

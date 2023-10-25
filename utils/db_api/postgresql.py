@@ -158,7 +158,7 @@ class Database:
             WHERE language=(select COALESCE(language,'uz') from users where id=$1) and lower(name)=lower($2)"""
         return await self.execute(sql, user_id, course, fetchone=True)
 
-    async def select_courses(self,only_name=False, only_desc=False,
+    async def select_courses(self, only_name=False, only_desc=False,
                              only_about=False,
                              inline_mode=False):
         user_id = User.get_current().id
@@ -224,6 +224,47 @@ class Database:
                 LEFT JOIN open_lessons s ON s.id=o.open_lesson_id
                 WHERE o.course_name = $1"""
             return await self.execute(sql, course, fetchall=True)
+
+    #     SELECTION TABLE
+    async def is_contest_started(self):
+        sql = "SELECT status FROM selection"
+        row = await self.execute(sql, fetchone=True)
+        return row['status']
+
+    async def start_contest(self):
+        sql = "UPDATE  selection SET status=True"
+        await self.execute(sql, execute=True)
+        sql = "UPDATE  users SET is_participant = False"
+        await self.execute(sql, execute=True)
+
+    async def stop_contest(self):
+        sql = "UPDATE  selection SET status=False"
+        await self.execute(sql, execute=True)
+
+    async def start_user_contest(self):
+        user_id = User.get_current().id
+        sql = "UPDATE  users SET is_participant = True WHERE id=$1"
+        await self.execute(sql, user_id, execute=True)
+
+    async def is_contest_winner(self):
+        user_id = User.get_current().id
+        sql = "SELECT count(*) FROM users WHERE id=$1 and is_winner=True"
+        val = await self.execute(sql, user_id, fetchval=True)
+        return val > 0
+
+    async def select_random_user(self):
+        sql = "SELECT id,name,phone FROM users WHERE is_participant = True"
+        rows = await self.execute(sql, fetchall=True)
+        if not rows:
+            return None
+        selected_row = choice(rows)
+        sql = "UPDATE  users SET is_participant = False, is_winner=True WHERE id=$1"
+        await self.execute(sql, selected_row['id'],execute=True)
+        return selected_row
+
+    async def contest_participants(self):
+        sql = "SELECT id,name,phone FROM users WHERE is_participant = True"
+        return await self.execute(sql, fetchall=True)
 
 
 db = Database()
@@ -315,6 +356,7 @@ async def test_open_class():
     rows = await db.get_open_lesson_users()
     for row in rows:
         print(rows)
+
 
 if __name__ == '__main__':
     import asyncio

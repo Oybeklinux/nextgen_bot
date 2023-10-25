@@ -983,5 +983,24 @@ COMMIT;
     ],
     4: [
         """ALTER TABLE open_lesson_users ADD COLUMN date TIMESTAMP default now()"""
+    ],
+    5: [
+        """CREATE TABLE selection(
+        status bool default False
+        )"""
+    ],
+    6: [
+        """ALTER TABLE users
+        ADD COLUMN is_participant bool DEFAULT false
+        """
+    ],
+    7: [
+        """ALTER TABLE users
+        ADD COLUMN is_winner bool DEFAULT false
+        """
+    ],
+    8: [
+        """INSERT INTO selection VALUES(FALSE)
+        """
     ]
 }
