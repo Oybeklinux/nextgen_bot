@@ -5,6 +5,7 @@ from .inline import dp
 from .settings import dp
 from .register_user import dp
 from .contest import dp
+from .send_sms import dp
 from .echo import dp
 from .uploader import dp
 

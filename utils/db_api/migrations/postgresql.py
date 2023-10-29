@@ -1002,5 +1002,10 @@ COMMIT;
     8: [
         """INSERT INTO selection VALUES(FALSE)
         """
+    ],
+    9: [
+        """ALTER TABLE users
+        ADD COLUMN group_name varchar(15)
+        """
     ]
 }
