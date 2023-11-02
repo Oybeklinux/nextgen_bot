@@ -34,8 +34,8 @@ async def random_choice(message: types.Message):
     text = await _("show_winner")
     text = text.replace("#id", str(row['id'])).replace("#name", row['name'])
 
-    await message.answer(text=text, parse_mode=ParseMode.MARKDOWN)
     await send_all_users(text)
+    await message.answer(text=text, parse_mode=ParseMode.MARKDOWN)
 
 
 @dp.message_handler(IsIn('bсontest_users'))
@@ -57,7 +57,8 @@ async def contest_users(message: types.Message):
 async def send_all_users(text):
     users = await db.contest_participants()
     for user in users:
-        await bot.send_message(chat_id=user['id'], text=text, reply_markup=await get_main_kb())
+        await bot.send_message(chat_id=user['id'], text=text, reply_markup=await get_main_kb(),
+                               parse_mode=ParseMode.MARKDOWN)
 
 
 @dp.message_handler(IsIn('bstart'))

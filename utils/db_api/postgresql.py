@@ -253,12 +253,12 @@ class Database:
         return val > 0
 
     async def select_random_user(self):
-        sql = "SELECT id,name,phone FROM users WHERE is_participant = True"
+        sql = "SELECT id,name,phone FROM users WHERE is_participant = True and is_winner = False"
         rows = await self.execute(sql, fetchall=True)
         if not rows:
             return None
         selected_row = choice(rows)
-        sql = "UPDATE  users SET is_participant = False, is_winner=True WHERE id=$1"
+        sql = "UPDATE  users SET is_winner=True WHERE id=$1"
         await self.execute(sql, selected_row['id'],execute=True)
         return selected_row
 
