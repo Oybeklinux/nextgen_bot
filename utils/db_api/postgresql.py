@@ -263,8 +263,12 @@ class Database:
         return selected_row
 
     async def contest_participants(self):
-        sql = "SELECT id,name,phone FROM users WHERE is_participant = True"
+        sql = "SELECT id,name,phone,is_winner FROM users WHERE is_participant = True"
         return await self.execute(sql, fetchall=True)
+
+    async def select_users_by_group(self, group):
+        sql = "SELECT id,name,phone,is_winner FROM users WHERE group_name =$1"
+        return await self.execute(sql, group, fetchall=True)
 
 
 db = Database()

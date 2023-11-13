@@ -266,7 +266,7 @@ class Texts:
                 "❗ *Format*: offline"
             ),
             "open_lesson_confirm": (
-                "Please wait for our manager to contact you soon and answer all your questions.😊"
+                "Please wait for our manager to contact you shortly and answer all your questions.😊"
             ),
             "send_phone": (
                 "Send your phone number by pressing the *📱 Send contact* button"

@@ -50,15 +50,22 @@ async def contest_users(message: types.Message):
     i = 0
     for row in rows:
         i += 1
-        text = f'{text}\n{i}. *{row["id"]}* {row["name"]}'
+        winner = "🏆" if row[3] else ''
+        text = f'{text}\n{winner}{i}. *{row["id"]}* {row["name"]}'
     await message.answer(text=text, parse_mode=ParseMode.MARKDOWN)
 
 
 async def send_all_users(text):
     users = await db.contest_participants()
     for user in users:
-        await bot.send_message(chat_id=user['id'], text=text, reply_markup=await get_main_kb(),
+        await bot.send_message(chat_id=user['id'], text=text,
                                parse_mode=ParseMode.MARKDOWN)
+
+    users = await db.select_users_by_group('worker')
+    for user in users:
+        await bot.send_message(chat_id=user['id'], text=text,
+                               parse_mode=ParseMode.MARKDOWN)
+
 
 
 @dp.message_handler(IsIn('bstart'))
@@ -66,12 +73,13 @@ async def start_contest(message: types.Message):
 
     await db.start_contest()
     text = await _("contest_started")
-    await message.answer(text)
+    await message.reply(text=text)
+
 
 
 @dp.message_handler(IsIn('bstop'))
 async def stop_contest(message: types.Message):
     await db.stop_contest()
     text = await _("contest_stopped")
-    await message.answer(text)
+    await message.reply(text=text)
     await send_all_users(text)
