@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import types
 from aiogram.types import ParseMode
 
@@ -57,15 +59,18 @@ async def contest_users(message: types.Message):
 
 async def send_all_users(text):
     users = await db.contest_participants()
+    logging.info(f"BEGIN: Sending message to all: {text}")
     for user in users:
+        logging.info(f"{user['id']} {user['name']}")
         await bot.send_message(chat_id=user['id'], text=text,
                                parse_mode=ParseMode.MARKDOWN)
 
     users = await db.select_users_by_group('worker')
     for user in users:
+        logging.info(f"{user['id']} {user['name']}")
         await bot.send_message(chat_id=user['id'], text=text,
                                parse_mode=ParseMode.MARKDOWN)
-
+    logging.info(f"END: Sending message to all: {text}")
 
 
 @dp.message_handler(IsIn('bstart'))
