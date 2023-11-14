@@ -2,6 +2,7 @@ import logging
 
 from aiogram import types
 from aiogram.types import ParseMode
+from aiogram.utils.exceptions import Unauthorized
 
 from data.texts import _
 from filters.is_in import IsIn
@@ -36,7 +37,7 @@ async def random_choice(message: types.Message):
     text = await _("show_winner")
     text = text.replace("#id", str(row['id'])).replace("#name", row['name'])
 
-    await send_all_users(text)
+    await send_all_users(text, message)
     await message.answer(text=text, parse_mode=ParseMode.MARKDOWN)
 
 
@@ -57,19 +58,30 @@ async def contest_users(message: types.Message):
     await message.answer(text=text, parse_mode=ParseMode.MARKDOWN)
 
 
-async def send_all_users(text):
+async def send_all_users(text, message:types.Message):
     users = await db.contest_participants()
     logging.info(f"BEGIN: Sending message to all: {text}")
     for user in users:
-        logging.info(f"{user['id']} {user['name']}")
-        await bot.send_message(chat_id=user['id'], text=text,
+
+        try:
+            await bot.send_message(chat_id=user['id'], text=text,
                                parse_mode=ParseMode.MARKDOWN)
+            logging.info(f"{user['id']} {user['name']}")
+        except Unauthorized:
+            await message.answer(text=f"{user['id']} {user['name']} blocked the bot")
+            logging.info(f"{user['id']} {user['name']} blocked the bot")
 
     users = await db.select_users_by_group('worker')
     for user in users:
-        logging.info(f"{user['id']} {user['name']}")
-        await bot.send_message(chat_id=user['id'], text=text,
+
+        try:
+            await bot.send_message(chat_id=user['id'], text=text,
                                parse_mode=ParseMode.MARKDOWN)
+            logging.info(f"{user['id']} {user['name']}")
+        except Unauthorized:
+            await message.answer(text=f"{user['id']} {user['name']} blocked the bot")
+            logging.info(f"{user['id']} {user['name']} blocked the bot")
+
     logging.info(f"END: Sending message to all: {text}")
 
 
@@ -81,10 +93,9 @@ async def start_contest(message: types.Message):
     await message.reply(text=text)
 
 
-
 @dp.message_handler(IsIn('bstop'))
 async def stop_contest(message: types.Message):
     await db.stop_contest()
     text = await _("contest_stopped")
+    await send_all_users(text, message)
     await message.reply(text=text)
-    await send_all_users(text)
