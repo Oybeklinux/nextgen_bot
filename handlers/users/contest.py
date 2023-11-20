@@ -49,13 +49,13 @@ async def contest_users(message: types.Message):
         await message.answer(text=await _("no_participants"))
         return
 
-    text = ''
-    i = 0
-    for row in rows:
-        i += 1
-        winner = "🏆" if row[3] else ''
-        text = f'{text}\n{winner}{i}. *{row["id"]}* {row["name"]}'
-    await message.answer(text=text, parse_mode=ParseMode.MARKDOWN)
+    text = f'Tanlovda qatnashuvchilar {len(rows)}:'
+
+    for user in rows:
+        if user['name'] and user['phone']:
+            is_winner = '🏆' if user['is_winner'] else ''
+            text += f"\n{str(user['id']).center(12)} | {user['name'][:12].center(14)} | {is_winner}"
+    await message.answer(text=f'<code>{text}</code>')
 
 
 async def send_all_users(text, message:types.Message):

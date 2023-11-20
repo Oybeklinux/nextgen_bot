@@ -270,6 +270,10 @@ class Database:
         sql = "SELECT id,name,phone,is_winner FROM users WHERE group_name =$1"
         return await self.execute(sql, group, fetchall=True)
 
+    async def select_users_by_date(self, date):
+        sql = "SELECT id,name,phone,is_winner FROM users WHERE date(created_at) =$1"
+        return await self.execute(sql, date, fetchall=True)
+
 
 db = Database()
 

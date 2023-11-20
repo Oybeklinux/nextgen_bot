@@ -1007,5 +1007,10 @@ COMMIT;
         """ALTER TABLE users
         ADD COLUMN group_name varchar(15)
         """
+    ],
+    10: [
+        """ALTER TABLE users
+        ADD COLUMN created_at TIMESTAMP DEFAULT NOW()
+        """
     ]
 }

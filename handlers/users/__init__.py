@@ -6,6 +6,7 @@ from .settings import dp
 from .register_user import dp
 from .contest import dp
 from .send_sms import dp
+from .statistics import dp
 from .echo import dp
 from .uploader import dp
 
