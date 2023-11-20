@@ -36,7 +36,7 @@ async def phone_to_settings(message: types.Message, state: FSMContext):
         await message.answer(text=await _('phone_edit_ok'), reply_markup=await get_settings_kb())
         await state.finish()
     else:
-        await message.answer(text=await _('tinput_name'))
+        await message.answer(text=await _('tinput_name'), reply_markup=types.ReplyKeyboardRemove())
         await state.set_state('name')
     await db.update_user(id=user_id, phone=phone)
 
