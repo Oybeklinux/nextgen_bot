@@ -7,6 +7,7 @@ async def _(key):
     if User.get_current():
         user_id = User.get_current().id
         language = await db.select_user_language(user_id)
+        if not language: language = "uz"
         return Texts.strings[language][key]
     else:
         return Texts.strings['uz'][key]
@@ -113,7 +114,9 @@ class Texts:
             "show_winner": "Tasodifiy tanlash yo'li bilan tanlovda quyidagi ishtirokchi g'olib bo'ldi\n*ID*:#id\n*Ismi*:#name",
             "contest_started": '💥 Tanlov boshlandi 💥',
             "contest_stopped": 'Tanlov tugadi',
-            "no_participants": "Ishtirokchilar qolmadi"
+            "no_participants": "Ishtirokchilar qolmadi",
+            "warn_select_lang": "Tilni tanlashingiz kerak",
+            "warn_send_phone": "Telefon raqamni pastdagi tugma orqali yuboring"
         },
         "ru": {
             "courses": (
@@ -214,7 +217,9 @@ class Texts:
             "show_winner": "Следующий участник выиграл конкурс случайным выбором\n*ID*:#id\n*Имя*:#name",
             "contest_started": "💥 Конкурс начался 💥",
             "contest_stopped": "Конкурс окончен",
-            "no_participants": "Участников не осталось "
+            "no_participants": "Участников не осталось ",
+            "warn_select_lang": "Вы должны выбрать язык",
+            "warn_send_phone": "Отправьте номер телефона, используя кнопку ниже"
         },
         "en": {
 
@@ -318,7 +323,9 @@ class Texts:
             "show_winner": "The following entrant has won the contest by random selection\n*ID*:#id\n*Name*:#name",
             "contest_started": '💥 The contest has started 💥',
             "contest_stopped": 'The contest is over',
-            "no_participants": "No participants left"
+            "no_participants": "No participants left",
+            "warn_select_lang": "You must select a language",
+            "warn_send_phone": "Send the phone number using the button below"
 
         }
     }

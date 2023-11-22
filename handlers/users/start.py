@@ -41,9 +41,9 @@ async def bot_start(message: types.Message, state: FSMContext):
 @dp.message_handler(state="edit_languge")
 @dp.message_handler(state="select_language")
 async def bot_echo(message: types.Message):
-    await message.answer("Tilni tanlang")
+    await message.answer(await _("warn_select_lang"))
 
 
 @dp.message_handler(state="send_phone")
 async def bot_echo(message: types.Message):
-    await message.answer("Pastda telefon raqamni yuboradigan tugma bor, ushani bosib yuboring")
+    await message.answer(await _("warn_send_phone"))

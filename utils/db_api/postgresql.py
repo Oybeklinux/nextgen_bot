@@ -101,7 +101,7 @@ class Database:
 
     async def select_user(self, **kwargs):
         sql, parameters = self.format_args(kwargs)
-        sql = f"""SELECT * FROM users {sql}"""
+        sql = f"""SELECT * FROM users WHERE {sql}"""
         return await self.execute(sql, *parameters, fetchone=True)
 
     async def select_user_language(self, id):
