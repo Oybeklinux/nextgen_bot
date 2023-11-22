@@ -30,7 +30,6 @@ async def edit_language(message: types.Message, state: FSMContext):
     await state.set_state('edit_languge')
 
 
-
 @dp.message_handler(IsIn('bsend_phone'))
 async def edit_phone(message: types.Message, state: FSMContext):
     await state.finish()

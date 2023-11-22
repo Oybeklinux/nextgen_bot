@@ -101,7 +101,7 @@ class Database:
 
     async def select_user(self, **kwargs):
         sql, parameters = self.format_args(kwargs)
-        sql = f"""SELECT * FROM users WHERE {sql}"""
+        sql = f"""SELECT * FROM users {sql}"""
         return await self.execute(sql, *parameters, fetchone=True)
 
     async def select_user_language(self, id):
@@ -273,6 +273,12 @@ class Database:
     async def select_users_by_date(self, date):
         sql = "SELECT id,name,phone,is_winner FROM users WHERE date(created_at) =$1"
         return await self.execute(sql, date, fetchall=True)
+
+    async def number_of_users(self, **kwargs):
+        sql, parameters = self.format_args(kwargs)
+        sql = "WHERE " + sql if sql else ''
+        sql = f"""SELECT count(*) FROM users {sql}"""
+        return await self.execute(sql, *parameters, fetchval=True)
 
 
 db = Database()

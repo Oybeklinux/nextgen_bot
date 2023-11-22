@@ -1,4 +1,7 @@
+from asyncio.streams import FlowControlMixin
+
 from aiogram import types
+from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
 from asyncpg import UniqueViolationError
 
@@ -8,7 +11,7 @@ from loader import dp, db
 
 
 @dp.message_handler(CommandStart(), state=None)
-async def bot_start(message: types.Message):
+async def bot_start(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
 
     try:
@@ -29,7 +32,18 @@ async def bot_start(message: types.Message):
     if not await db.is_user_registered(user_id):
         # text += "Для регистрации выберите пожалуйста свой язык"
         await message.answer(f'{text}', reply_markup=language_ikb)
+        await state.set_state("select_language")
     else:
         # text = Texts().get("start").replace("full_name", message.from_user.full_name)
         await message.answer(await _('tmain_menu'), reply_markup=await get_main_kb())
 
+
+@dp.message_handler(state="edit_languge")
+@dp.message_handler(state="select_language")
+async def bot_echo(message: types.Message):
+    await message.answer("Tilni tanlang")
+
+
+@dp.message_handler(state="send_phone")
+async def bot_echo(message: types.Message):
+    await message.answer("Pastda telefon raqamni yuboradigan tugma bor, ushani bosib yuboring")
